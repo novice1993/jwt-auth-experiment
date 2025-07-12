@@ -179,8 +179,60 @@ docs(readme): 프로젝트 초기 설정 방법 업데이트
 
 기능 개발, 버그 수정 등 모든 작업은 별도의 브랜치에서 진행하는 것을 원칙으로 합니다.
 
-1.  **`main` (또는 `master`) 브랜치**: 항상 안정적이고 배포 가능한 상태를 유지합니다. 직접적인 커밋은 금지합니다.
-2.  **기능 브랜치**: 새로운 기능을 개발할 때 사용합니다. `main` 브랜치에서 분기하며, 이름은 `feat/` 접두사를 사용합니다. (예: `feat/user-signup`)
-3.  **수정 브랜치**: 버그를 수정할 때 사용합니다. `main` 브랜치에서 분기하며, 이름은 `fix/` 접두사를 사용합니다. (예: `fix/login-error`)
+### 3.0.1. `main` 브랜치 직접 푸시 금지 (엄격)
 
-작업이 완료되면 Pull Request (PR)를 통해 `main` 브랜치로 병합합니다.
+**`main` 브랜치에는 어떠한 경우에도 직접 커밋(push)할 수 없습니다.** 모든 변경 사항은 반드시 별도의 기능/수정 브랜치에서 작업한 후, Pull Request (PR)를 통해 코드 리뷰를 거쳐 `main` 브랜치로 병합되어야 합니다. 이는 코드의 안정성과 품질을 보장하기 위한 핵심 원칙입니다.
+
+1.  **`main` 브랜치**: 항상 안정적이고 배포 가능한 상태를 유지합니다. 직접적인 커밋은 금지하며, 모든 기능 및 수정 사항은 PR을 통해 병합됩니다.
+
+1.  **`main` 브랜치**: 항상 안정적이고 배포 가능한 상태를 유지합니다. 직접적인 커밋은 금지하며, 모든 기능 및 수정 사항은 PR을 통해 병합됩니다.
+2.  **기능 브랜치 (`feat/<feature-name>`)**: 새로운 기능을 개발할 때 사용합니다. `main` 브랜치에서 분기하며, 기능 개발이 완료되면 `main` 브랜치로 PR을 생성합니다. (예: `feat/user-signup`)
+3.  **수정 브랜치 (`fix/<bug-description>`)**: 버그를 수정할 때 사용합니다. `main` 브랜치에서 분기하며, 버그 수정이 완료되면 `main` 브랜치로 PR을 생성합니다. (예: `fix/login-error`)
+
+### 3.1. Pull Request (PR) 워크플로우
+
+작업 브랜치에서 개발을 완료한 후, 다음 절차에 따라 PR을 생성하고 병합합니다.
+
+1.  **작업 브랜치 생성 및 이동**:
+    ```bash
+    git checkout -b feat/my-new-feature
+    ```
+2.  **코드 작성 및 커밋**: 작업 단위별로 커밋 메시지 컨벤션을 지켜 커밋합니다.
+    ```bash
+    git add .
+    git commit -m "feat(scope): 새로운 기능 구현"
+    ```
+3.  **원격 저장소에 푸시**:
+    ```bash
+    git push origin feat/my-new-feature
+    ```
+4.  **Pull Request 생성 (`gh` CLI 사용)**:
+    ```bash
+    gh pr create --base main --head feat/my-new-feature --title "feat(scope): 새로운 기능 구현" --body "이 PR은 새로운 기능을 구현합니다. 상세 내용은 다음과 같습니다..."
+    ```
+    -   `--base`: PR이 병합될 대상 브랜치 (일반적으로 `main`)
+    -   `--head`: PR을 생성할 소스 브랜치 (현재 작업 브랜치)
+    -   `--title`: PR 제목 (커밋 메시지 제목과 동일하게 작성)
+    -   `--body`: PR 본문 (자세한 설명, 관련 이슈 링크 등)
+
+5.  **코드 리뷰 및 승인**: 팀원들의 코드 리뷰를 받고, 필요한 경우 수정 사항을 반영합니다.
+
+6.  **Pull Request 병합 (`gh` CLI 사용)**:
+    리뷰가 완료되고 승인되면, PR을 병합합니다. `gh pr merge` 명령은 다양한 병합 옵션을 제공합니다.
+    ```bash
+    # Squash and merge (가장 권장되는 방식: 여러 커밋을 하나의 커밋으로 합쳐서 병합)
+    gh pr merge <PR-NUMBER> --squash
+
+    # Merge commit (기존 커밋 히스토리를 유지하며 병합)
+    # gh pr merge <PR-NUMBER> --merge
+
+    # Rebase and merge (리베이스 후 병합)
+    # gh pr merge <PR-NUMBER> --rebase
+    ```
+    -   `<PR-NUMBER>`: GitHub에서 생성된 Pull Request 번호
+
+7.  **로컬 브랜치 삭제**: 병합이 완료된 작업 브랜치는 로컬 및 원격에서 삭제합니다.
+    ```bash
+    git branch -d feat/my-new-feature
+    git push origin --delete feat/my-new-feature
+    ```
