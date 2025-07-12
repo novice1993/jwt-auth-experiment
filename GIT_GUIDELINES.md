@@ -50,6 +50,55 @@ git commit -m "Initial commit"
 git push -u origin main
 ```
 
+### 1.5. Git 무시 파일 (`.gitignore`) 및 속성 (`.gitattributes`) 설정
+
+프로젝트에 불필요한 파일(예: 빌드 결과물, 의존성 모듈, IDE 설정 파일 등)이 Git 저장소에 포함되지 않도록 `.gitignore` 파일을 설정하고, OS 간의 줄바꿈 문제를 방지하기 위해 `.gitattributes` 파일을 설정합니다.
+
+#### 1.5.1. `.gitignore` 파일
+
+`.gitignore` 파일은 Git이 추적하지 않을 파일이나 디렉토리를 지정합니다. 프로젝트 루트에 생성하며, 일반적으로 다음과 같은 내용을 포함합니다.
+
+```
+# Dependencies
+/node_modules
+/backend/node_modules
+/frontend/node_modules
+
+# Build artifacts
+/dist
+/build
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs and editors
+.idea
+.vscode/
+*.swp
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+```
+
+#### 1.5.2. `.gitattributes` 파일
+
+`.gitattributes` 파일은 Git이 특정 파일에 대해 어떻게 동작할지 정의합니다. 특히 OS 간의 줄바꿈(Line Ending) 문제를 해결하는 데 유용합니다. 프로젝트 루트에 생성하며, 모든 텍스트 파일의 줄바꿈을 LF(`\n`)로 통일하도록 설정하는 것을 권장합니다.
+
+```
+# Set default behavior for all files to be text
+* text=auto eol=lf
+```
+
 ## 2. 커밋 메시지 컨벤션
 
 프로젝트의 모든 커밋 메시지는 **한글**로 작성하는 것을 원칙으로 하며, **Conventional Commits** 명세에 따라 구성합니다. 이는 커밋 히스토리의 가독성을 높이고, 변경 사항을 쉽게 추적하며, 버전 관리를 자동화하는 데 도움이 됩니다.
