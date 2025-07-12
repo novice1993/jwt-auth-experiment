@@ -27,3 +27,7 @@ yarn-error.log*
 # OS-generated files
 .DS_Store
 Thumbs.db
+
+# Package lock files in workspaces
+/frontend/package-lock.json
+/backend/package-lock.json
