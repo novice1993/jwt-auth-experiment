@@ -1,12 +1,25 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import { initializeDatabase } from './db/init';
+
+dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-app.get('/', (req: Request, res: Response) => {
+app.use(cors());
+app.use(express.json());
+
+app.get('/', (req, res) => {
   res.send('Hello from the backend!');
 });
 
-app.listen(port, () => {
-  console.log(`Backend server is running at http://localhost:${port}`);
-});
+const startServer = async () => {
+  await initializeDatabase();
+  app.listen(port, () => {
+    console.log(`Backend server is running on http://localhost:${port}`);
+  });
+};
+
+startServer();
